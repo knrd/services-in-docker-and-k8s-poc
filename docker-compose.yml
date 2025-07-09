@@ -1,0 +1,50 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.13.7-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  config_sender:
+    image: knrd/config_sender:0.0.1
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq
+
+  web_service:
+    image: knrd/web_service:0.0.1
+    # depends_on:
+      # rabbitmq:
+      #   condition: service_healthy
+      # config_sender:
+      #   condition: service_started
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq
+      - SRV_WEB_NAME=web-service
+
+  worker_service:
+    image: knrd/web_service:0.0.1
+    # depends_on:
+      # rabbitmq:
+      #   condition: service_healthy
+      # config_sender:
+      #   condition: service_started
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq
+      - SRV_WEB_NAME=WORKER-SERVICE
+
+  nginx:
+    image: nginx:1.29.0-alpine
+    ports:
+      - "8880:8110"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - web_service

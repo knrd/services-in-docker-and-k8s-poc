@@ -1,0 +1,66 @@
+rabbitmq:
+  enabled: true
+  image:
+    tag: 3.13.7-management
+  # service:
+  #   ports:
+  #     amqp: 5672
+  #     management: 15672
+
+config_sender:
+  image:
+    repository: knrd/config_sender
+    tag: 0.0.1
+  env:
+    RABBITMQ_URL: "amqp://guest:guest@config-system-rabbitmq"
+
+web_service:
+  replicas: 1
+  image:
+    repository: knrd/web_service
+    tag: 0.0.1
+  env:
+    RABBITMQ_URL: "amqp://guest:guest@config-system-rabbitmq"
+    SRV_WEB_NAME: "WEB-service"
+
+worker_service:
+  replicas: 1
+  image:
+    repository: knrd/web_service
+    tag: 0.0.1
+  env:
+    RABBITMQ_URL: "amqp://guest:guest@config-system-rabbitmq"
+    SRV_WEB_NAME: "WORKER-service"
+
+nginx:
+  image:
+    repository: nginx
+    tag: 1.29.0-alpine
+  service:
+    type: LoadBalancer
+    port: 80
+    targetPort: 8110
+  config: |
+    upstream web_services {
+        server {{ include "config-system.fullname" . }}-web-service:8080;
+    }
+    upstream worker_services {
+        server {{ include "config-system.fullname" . }}-worker-service:8080;
+    }
+    
+    server {
+        listen 8110;
+        location / {
+            proxy_pass http://web_services;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+        location /status {
+            proxy_pass http://web_services/status;
+            proxy_set_header Host $host;
+        }
+        location /worker_status {
+            proxy_pass http://worker_services/status;
+            proxy_set_header Host $host;
+        }
+    }

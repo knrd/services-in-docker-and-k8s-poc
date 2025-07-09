@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "config-system.fullname" . }}-nginx-config
+data:
+  nginx.conf: |-
+    {{ .Values.nginx.config | indent 4 }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "config-system.fullname" . }}-nginx
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "config-system.name" . }}
+      component: nginx
+  template:
+    metadata:
+      labels:
+        app: {{ include "config-system.name" . }}
+        component: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
+          ports:
+            - containerPort: 8110
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: nginx.conf
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: {{ include "config-system.fullname" . }}-nginx-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "config-system.fullname" . }}-nginx
+spec:
+  type: {{ .Values.nginx.service.type }}
+  ports:
+    - port: {{ .Values.nginx.service.port }}
+      targetPort: {{ .Values.nginx.service.targetPort }}
+  selector:
+    app: {{ include "config-system.name" . }}
+    component: nginx

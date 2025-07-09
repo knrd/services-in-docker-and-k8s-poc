@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "config-system.fullname" . }}-config-sender
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "config-system.name" . }}
+      component: config-sender
+  template:
+    metadata:
+      labels:
+        app: {{ include "config-system.name" . }}
+        component: config-sender
+    spec:
+      containers:
+        - name: config-sender
+          image: "{{ .Values.config_sender.image.repository }}:{{ .Values.config_sender.image.tag }}"
+          env:
+            - name: RABBITMQ_URL
+              value: {{ .Values.config_sender.env.RABBITMQ_URL | quote }}

@@ -12,7 +12,7 @@ VERSION="$1"
 USERNAME="knrd"
 
 # List of service directories to build and push
-SERVICES=("config_sender" "web_service")
+SERVICES=("config_sender" "web_service" "simple_webapp")
 
 # Loop through each service
 for SERVICE in "${SERVICES[@]}"; do
@@ -27,5 +27,7 @@ for SERVICE in "${SERVICES[@]}"; do
   echo "🚀 Pushing image: $IMAGE_NAME:$VERSION"
   docker push "$IMAGE_NAME:$VERSION"
 done
+
+echo $VERSION > version.txt
 
 echo "✅ All images built and pushed successfully!"

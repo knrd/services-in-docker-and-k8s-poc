@@ -19,7 +19,10 @@ helm template config-system "$CHART_DIR" \
 
 # Optionally, combine all files into a single manifest
 echo "Combining manifests into a single file..."
-find "$OUTPUT_DIR" -name '*.yaml' -exec cat {} \; > "$OUTPUT_DIR/all-in-one.yaml"
+# Create temporary file for combination
+rm -f "$OUTPUT_DIR/all-in-one.yaml.tmp"
+find "$OUTPUT_DIR" -name '*.yaml' ! -name 'all-in-one.yaml' -exec cat {} \; > "$OUTPUT_DIR/all-in-one.yaml.tmp"
+mv "$OUTPUT_DIR/all-in-one.yaml.tmp" "$OUTPUT_DIR/all-in-one.yaml"
 
 echo "Kubernetes manifests generated successfully!"
 echo "Output location: $OUTPUT_DIR"

@@ -4,7 +4,7 @@ metadata:
   name: {{ include "config-system.fullname" . }}-nginx-config
 data:
   nginx.conf: |-
-    {{ .Values.nginx.config | indent 4 }}
+{{ .Values.nginx.config | indent 4 }}
 
 ---
 apiVersion: apps/v1

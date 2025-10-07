@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ex
 
 # Configuration
 CHART_DIR="./helm/config-system"
@@ -31,10 +31,10 @@ fi
 rm -rf "$PACKAGE_DIR"
 
 # Git operations
-echo "🚀 Pushing changes to GitHub..."
-git add "$DOCS_DIR"
-git commit -m "Update Helm repository"
-git push origin main
+# echo "🚀 Pushing changes to GitHub..."
+# git add "$DOCS_DIR"
+# git commit -m "Update Helm repository"
+# git push origin master
 
-echo "✅ Helm chart published successfully!"
-echo "Repository is available at: $GITHUB_PAGES_URL"
+# echo "✅ Helm chart published successfully!"
+# echo "Repository is available at: $GITHUB_PAGES_URL"

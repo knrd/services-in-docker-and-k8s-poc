@@ -40,27 +40,3 @@ nginx:
     type: LoadBalancer
     port: 80
     targetPort: 8110
-  config: |
-    upstream web_services {
-        server {{ include "config-system.fullname" . }}-web-service:8080;
-    }
-    upstream worker_services {
-        server {{ include "config-system.fullname" . }}-worker-service:8080;
-    }
-    
-    server {
-        listen 8110;
-        location / {
-            proxy_pass http://web_services;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
-        location /status {
-            proxy_pass http://web_services/status;
-            proxy_set_header Host $host;
-        }
-        location /worker_status {
-            proxy_pass http://worker_services/status;
-            proxy_set_header Host $host;
-        }
-    }

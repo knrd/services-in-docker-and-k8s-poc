@@ -13,14 +13,14 @@ mkdir -p "$PACKAGE_DIR"
 mkdir -p "$DOCS_DIR"
 
 # Package the Helm chart
-echo "📦 Packaging Helm chart..."
+echo "Packaging Helm chart..."
 helm package "$CHART_DIR" -d "$PACKAGE_DIR"
 
 # Move packaged chart to docs directory
 mv "$PACKAGE_DIR"/*.tgz "$DOCS_DIR/"
 
 # Generate or update the Helm repository index
-echo "📑 Updating Helm repository index..."
+echo "Updating Helm repository index..."
 if [ -f "$DOCS_DIR/index.yaml" ]; then
     helm repo index "$DOCS_DIR" --url "$GITHUB_PAGES_URL" --merge "$DOCS_DIR/index.yaml"
 else
@@ -31,10 +31,10 @@ fi
 rm -rf "$PACKAGE_DIR"
 
 # Git operations
-# echo "🚀 Pushing changes to GitHub..."
+# echo "Pushing changes to GitHub..."
 # git add "$DOCS_DIR"
 # git commit -m "Update Helm repository"
 # git push origin master
 
-# echo "✅ Helm chart published successfully!"
+# echo "Helm chart published successfully!"
 # echo "Repository is available at: $GITHUB_PAGES_URL"

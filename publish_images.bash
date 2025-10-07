@@ -4,7 +4,7 @@ set -e
 
 # Check if a version was provided as an argument
 if [ -z "$1" ]; then
-  echo "❌ Usage: $0 <version>"
+  echo "Usage: $0 <version>"
   exit 1
 fi
 
@@ -18,16 +18,16 @@ SERVICES=("config_sender" "web_service" "simple_webapp")
 for SERVICE in "${SERVICES[@]}"; do
   IMAGE_NAME="$USERNAME/$SERVICE"
 
-  echo "📦 Building image: $IMAGE_NAME:$VERSION from ./$SERVICE"
+  echo "Building image: $IMAGE_NAME:$VERSION from ./$SERVICE"
 
   # Build the Docker image using the Dockerfile in the service directory
   docker build -t "$IMAGE_NAME:$VERSION" "$SERVICE"
   
   # Push the image to Docker Hub
-  echo "🚀 Pushing image: $IMAGE_NAME:$VERSION"
+  echo "Pushing image: $IMAGE_NAME:$VERSION"
   docker push "$IMAGE_NAME:$VERSION"
 done
 
 echo $VERSION > version.txt
 
-echo "✅ All images built and pushed successfully!"
+echo "All images built and pushed successfully!"

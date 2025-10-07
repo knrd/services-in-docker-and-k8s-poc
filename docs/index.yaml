@@ -1,0 +1,13 @@
+apiVersion: v1
+entries:
+  config-system:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-10-07T20:44:31.760032757+02:00"
+    description: Microservices Configuration System with RabbitMQ and Load Balancing
+    digest: f867c64b3db8621fceefe4f2504fadeab1cb90d1c1cc9ac3521d1bc95be633f1
+    name: config-system
+    urls:
+    - https://knrd.github.io/services-in-docker-and-k8s-poc/config-system-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-10-07T20:44:31.759620092+02:00"

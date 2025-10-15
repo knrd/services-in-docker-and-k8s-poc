@@ -10,26 +10,26 @@ rabbitmq:
 config_sender:
   image:
     repository: knrd/config_sender
-    tag: 0.0.1
+    tag: 0.0.2
   env:
-    RABBITMQ_URL: "amqp://guest:guest@config-system-rabbitmq"
+    RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672"
 
 web_service:
   replicas: 1
   image:
     repository: knrd/web_service
-    tag: 0.0.1
+    tag: 0.0.2
   env:
-    RABBITMQ_URL: "amqp://guest:guest@config-system-rabbitmq"
+    RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672"
     SRV_WEB_NAME: "WEB-service"
 
 worker_service:
   replicas: 1
   image:
     repository: knrd/web_service
-    tag: 0.0.1
+    tag: 0.0.2
   env:
-    RABBITMQ_URL: "amqp://guest:guest@config-system-rabbitmq"
+    RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672"
     SRV_WEB_NAME: "WORKER-service"
 
 nginx:

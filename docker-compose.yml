@@ -11,7 +11,7 @@ services:
       retries: 5
 
   config_sender:
-    image: knrd/config_sender:0.0.1
+    image: knrd/config_sender:0.0.2
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -19,7 +19,7 @@ services:
       - RABBITMQ_URL=amqp://guest:guest@rabbitmq
 
   web_service:
-    image: knrd/web_service:0.0.1
+    image: knrd/web_service:0.0.2
     # depends_on:
       # rabbitmq:
       #   condition: service_healthy
@@ -30,7 +30,7 @@ services:
       - SRV_WEB_NAME=web-service
 
   worker_service:
-    image: knrd/web_service:0.0.1
+    image: knrd/web_service:0.0.2
     # depends_on:
       # rabbitmq:
       #   condition: service_healthy
